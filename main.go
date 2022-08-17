@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/anhgelus/discord-hogwarts-housing/src"
 	"github.com/bwmarrin/discordgo"
 	"os"
 	"os/signal"
@@ -16,7 +17,7 @@ func main() {
 		panic(err)
 	}
 
-	discord.Identify.Intents = discordgo.IntentsGuilds
+	discord.Identify.Intents = discordgo.IntentsGuildMessages
 
 	err = discord.Open()
 	if err != nil {
@@ -27,6 +28,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	src.RegisterHandler(discord)
 
 	// Wait here until CTRL-C or other term signal is received.
 	fmt.Println("Bot is now running. Press CTRL-C to exit.")

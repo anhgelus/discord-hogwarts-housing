@@ -1,4 +1,4 @@
-module discord-hogwarts-housing
+module github.com/anhgelus/discord-hogwarts-housing
 
 go 1.19
 
