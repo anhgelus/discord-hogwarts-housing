@@ -1,0 +1,10 @@
+version: '3'
+services:
+  bot:
+    build: .
+    environment:
+      - TOKEN=NzE1MTYwODcxNTk2NDU3OTk0.Gqlq56.2jgZ4jJkZmhI_Qa3CkNMNOawCSJ9_y3BAsZuHU
+  redis:
+    image: redis:alpine
+    command:
+      - redis-server --save 60 1 --loglevel warning
