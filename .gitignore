@@ -13,3 +13,9 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+# Disable compose.yaml cuz the token of my bot is inside
+compose.yaml
+
+# Disable GoLang folder
+.idea
