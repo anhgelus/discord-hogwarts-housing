@@ -63,8 +63,15 @@ func listHouse(s *discordgo.Session, m *discordgo.MessageCreate) {
 }
 
 func leaveHouse(s *discordgo.Session, m *discordgo.MessageCreate) {
-	args := strings.Split(m.Content, " ")
-	house, err := guild.GetHouse(args[2], m.GuildID)
+	user := guild.GetUser(m.Author.ID, m.GuildID)
+	if user.HouseId == "" {
+		_, err := s.ChannelMessageSend(m.ChannelID, "You are not in a house")
+		if err != nil {
+			panic(err)
+		}
+		return
+	}
+	house, err := guild.GetHouse(user.HouseId, m.GuildID)
 	if err != nil {
 		_, err2 := s.ChannelMessageSend(m.ChannelID, "An error occurred: `"+err.Error()+"`")
 		if err2 != nil {
@@ -112,7 +119,7 @@ func helpHouse(s *discordgo.Session, id string) {
 				Value: "Join the house with the id <id>",
 			},
 			&discordgo.MessageEmbedField{
-				Name:  config.Prefix + "house leave",
+				Name:  config.Prefix + "house leave", // done
 				Value: "Leave your current house",
 			},
 			&discordgo.MessageEmbedField{
