@@ -62,6 +62,24 @@ func listHouse(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
+func leaveHouse(s *discordgo.Session, m *discordgo.MessageCreate) {
+	args := strings.Split(m.Content, " ")
+	house, err := guild.GetHouse(args[2], m.GuildID)
+	if err != nil {
+		_, err2 := s.ChannelMessageSend(m.ChannelID, "An error occurred: `"+err.Error()+"`")
+		if err2 != nil {
+			panic(err2)
+		}
+	}
+	err = guild.UserLeave(house.Id, m.Author.ID, m.GuildID)
+	if err != nil {
+		_, err2 := s.ChannelMessageSend(m.ChannelID, "An error occurred: `"+err.Error()+"`")
+		if err2 != nil {
+			panic(err2)
+		}
+	}
+}
+
 // s = session
 // id = channelID
 func helpHouse(s *discordgo.Session, id string) {
@@ -70,7 +88,7 @@ func helpHouse(s *discordgo.Session, id string) {
 		Color: 0x00ff00,
 		Fields: []*discordgo.MessageEmbedField{
 			&discordgo.MessageEmbedField{
-				Name:  config.Prefix + "house create <name>",
+				Name:  config.Prefix + "house create <name>", // done
 				Value: "Create a new house, with the name <name>",
 			},
 			&discordgo.MessageEmbedField{
@@ -82,7 +100,7 @@ func helpHouse(s *discordgo.Session, id string) {
 				Value: "Update the house with the id <id> and change the value <value> by the new value <new-value>",
 			},
 			&discordgo.MessageEmbedField{
-				Name:  config.Prefix + "house list",
+				Name:  config.Prefix + "house list", // done
 				Value: "List all houses",
 			},
 			&discordgo.MessageEmbedField{
