@@ -1,6 +1,7 @@
 package database
 
 import (
+	"encoding/json"
 	"github.com/gomodule/redigo/redis"
 	"os"
 	"time"
@@ -36,19 +37,22 @@ func RedisGet(pool *redis.Pool, k string) (string, error) {
 }
 
 func RedisHset(pool *redis.Pool, k string, v interface{}) (string, error) {
-	c := pool.Get()
-	defer c.Close()
-	return redis.String(c.Do("HSET", redis.Args{}.Add(k).AddFlat(v)...))
+	j, err := json.Marshal(v)
+	if err != nil {
+		return "", err
+	}
+	return RedisSet(pool, k, string(j))
 }
 
-func RedisHget(pool *redis.Pool, k string, f string) (string, error) {
-	c := pool.Get()
-	defer c.Close()
-	return redis.String(c.Do("HGET", k, f))
-}
-
-func RedisHgetAll(pool *redis.Pool, k string) ([]interface{}, error) {
-	c := pool.Get()
-	defer c.Close()
-	return redis.Values(c.Do("HGETALL", k))
+func RedisHget(pool *redis.Pool, k string) (interface{}, error) {
+	j, err := RedisGet(pool, k)
+	if err != nil {
+		return nil, err
+	}
+	var v interface{}
+	err = json.Unmarshal([]byte(j), &v)
+	if err != nil {
+		return nil, err
+	}
+	return v, nil
 }

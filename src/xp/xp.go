@@ -1,6 +1,7 @@
 package xp
 
 import (
+	"fmt"
 	"github.com/anhgelus/discord-hogwarts-housing/src/database"
 	"github.com/anhgelus/discord-hogwarts-housing/src/util"
 	"github.com/bwmarrin/discordgo"
@@ -13,8 +14,12 @@ func NewMessage(m *discordgo.Message) float64 {
 		return 0
 	}
 	key := "xp:" + m.GuildID + ":" + m.Author.ID
-	database.RedisSet(c, key, m.Content)
-	return calc(len(m.Content), util.GetNumberOfChar(m.Content))
+	xp := calc(len(m.Content), util.GetNumberOfChar(m.Content))
+	_, err := database.RedisSet(c, key, fmt.Sprintf("%f", xp))
+	if err != nil {
+		return 0
+	}
+	return xp
 }
 
 // l int - length of the message
