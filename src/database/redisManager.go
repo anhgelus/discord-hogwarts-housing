@@ -47,8 +47,8 @@ func RedisHget(pool *redis.Pool, k string, f string) (string, error) {
 	return redis.String(c.Do("HGET", k, f))
 }
 
-func RedisHgetAll(pool *redis.Pool, k string) (map[string]string, error) {
+func RedisHgetAll(pool *redis.Pool, k string) ([]interface{}, error) {
 	c := pool.Get()
 	defer c.Close()
-	return redis.StringMap(c.Do("HGETALL", k))
+	return redis.Values(c.Do("HGETALL", k))
 }
