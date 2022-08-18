@@ -17,7 +17,7 @@ func MessageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		prefixied(s, m)
 		return
 	}
-	msg := fmt.Sprintf(m.Author.Username+" given xp %v", xp.NewMessage(m.Content))
+	msg := fmt.Sprintf(m.Author.Username+" given xp %v", xp.NewMessage(m.Message))
 	_, err := s.ChannelMessageSend(m.ChannelID, msg)
 	if err != nil {
 		panic(err)
